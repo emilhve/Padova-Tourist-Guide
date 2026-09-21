@@ -141,17 +141,28 @@ nav a:focus-visible {
 
 .button {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.8rem 1.25rem;
   color: white;
+  font: inherit;
   font-weight: 750;
   text-decoration: none;
+  cursor: pointer;
   background: var(--color-accent);
+  border: 0;
   border-radius: 999px;
 }
 
 .button:hover,
 .button:focus-visible {
   background: var(--color-accent-dark);
+}
+
+.button:disabled {
+  color: #8b837c;
+  cursor: not-allowed;
+  background: #e5ddd4;
 }
 
 .section {
@@ -259,6 +270,228 @@ nav a:focus-visible {
   font-size: 1.15rem;
 }
 
+.planner-heading {
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+}
+
+.planner-heading h1 {
+  max-width: 850px;
+  margin-bottom: 1.25rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  letter-spacing: -0.045em;
+}
+
+.planner-section {
+  padding-bottom: 5rem;
+}
+
+.planner-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1.2fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.planner-card {
+  padding: 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.planner-card-heading h2 {
+  margin-bottom: 1.5rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.poi-dropdown {
+  position: relative;
+}
+
+.poi-dropdown summary {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4.75rem;
+  padding: 1rem 1.15rem;
+  font-size: 1.05rem;
+  font-weight: 750;
+  cursor: pointer;
+  list-style: none;
+  background: var(--color-paper);
+  border: 2px solid var(--color-line);
+  border-radius: 0.85rem;
+}
+
+.poi-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.poi-dropdown summary::after {
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-left: auto;
+  content: "";
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-0.2rem);
+}
+
+.poi-dropdown[open] summary::after {
+  transform: rotate(225deg) translate(-0.1rem, -0.1rem);
+}
+
+.poi-dropdown summary:hover,
+.poi-dropdown summary:focus-visible,
+.poi-dropdown[open] summary {
+  border-color: var(--color-accent);
+}
+
+.poi-count {
+  flex: 0 0 auto;
+  color: var(--color-accent);
+  font-size: 0.9rem;
+}
+
+.poi-menu {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: 100%;
+  max-height: min(34rem, 68vh);
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 0.85rem;
+  box-shadow: 0 22px 55px rgb(40 34 30 / 22%);
+}
+
+.poi-actions {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.poi-actions button {
+  padding: 0.65rem 0.9rem;
+  color: var(--color-accent);
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+}
+
+.poi-actions button:hover,
+.poi-actions button:focus-visible {
+  color: white;
+  background: var(--color-accent);
+}
+
+.poi-actions button:disabled {
+  color: #a69e97;
+  cursor: not-allowed;
+  background: transparent;
+  border-color: var(--color-line);
+}
+
+.poi-options {
+  padding: 0.5rem;
+  margin: 0;
+  border: 0;
+}
+
+.poi-option {
+  display: grid;
+  grid-template-columns: 1.35rem 1fr;
+  gap: 0.85rem;
+  align-items: center;
+  min-height: 4rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  border-radius: 0.65rem;
+}
+
+.poi-option:hover,
+.poi-option:has(input:focus-visible) {
+  background: var(--color-paper);
+}
+
+.poi-option:has(input:checked) {
+  background: rgb(180 58 47 / 9%);
+}
+
+.poi-option input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--color-accent);
+}
+
+.poi-option span {
+  display: grid;
+}
+
+.poi-option strong {
+  line-height: 1.3;
+}
+
+.poi-option small,
+.field-help,
+.planner-status {
+  color: var(--color-muted);
+}
+
+.poi-option small {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field-help {
+  margin: 0.8rem 0 1.25rem;
+  font-size: 0.9rem;
+}
+
+.calculate-button {
+  width: 100%;
+  min-height: 3.5rem;
+}
+
+.planner-status {
+  min-height: 1.6rem;
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+}
+
+.planner-map .map {
+  min-height: 620px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .site-footer {
   padding: 2rem 1rem;
   color: var(--color-muted);
@@ -273,6 +506,7 @@ nav a:focus-visible {
 @media (max-width: 560px) {
   .site-header {
     align-items: flex-start;
+    flex-wrap: wrap;
     padding-block: 1rem;
   }
 
@@ -280,8 +514,39 @@ nav a:focus-visible {
     max-width: 11rem;
   }
 
+  nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .map {
     min-height: 380px;
+  }
+
+  .planner-heading {
+    padding-top: 2.5rem;
+  }
+
+  .planner-card {
+    padding: 1rem;
+  }
+
+  .poi-dropdown summary {
+    min-height: 4.25rem;
+  }
+
+  .poi-menu {
+    max-height: 62vh;
+  }
+}
+
+@media (max-width: 840px) {
+  .planner-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .planner-map .map {
+    min-height: 440px;
   }
 }
 

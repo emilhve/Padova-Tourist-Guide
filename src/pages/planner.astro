@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import Map from '../components/Map.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatCategory } from '../utils/formatCategory';
+
+const places = (await getCollection('places')).sort((a, b) => a.data.order - b.data.order);
+const mapPoints = places.map((place) => ({
+  title: place.data.title,
+  href: `/places/${place.id}/`,
+  latitude: place.data.coordinates.latitude,
+  longitude: place.data.coordinates.longitude,
+}));
+---
+
+<BaseLayout
+  title="Route planner"
+  description="Choose the Padova places you want to visit and prepare a walking or cycling route."
+>
+  <header class="planner-heading shell">
+    <p class="eyebrow">Build your day</p>
+    <h1>Choose your Padova stops.</h1>
+    <p class="lead">
+      Select the places you want to include. We will use them to calculate your route in the next
+      step.
+    </p>
+  </header>
+
+  <section class="planner-section shell" aria-labelledby="selection-title">
+    <div class="planner-grid">
+      <form id="route-selection" class="planner-card">
+        <div class="planner-card-heading">
+          <p class="eyebrow">Your route</p>
+          <h2 id="selection-title">Points of interest</h2>
+        </div>
+
+        <details class="poi-dropdown">
+          <summary>
+            <span>Choose points of interest</span>
+            <span class="poi-count" aria-live="polite">0 selected</span>
+          </summary>
+
+          <div class="poi-menu">
+            <div class="poi-actions" aria-label="Bulk selection controls">
+              <button type="button" data-select-all>Select all</button>
+              <button type="button" data-deselect-all disabled>Deselect all</button>
+            </div>
+
+            <fieldset class="poi-options">
+              <legend class="visually-hidden">Select points of interest</legend>
+              {
+                places.map((place) => (
+                  <label class="poi-option">
+                    <input type="checkbox" name="placeIds" value={place.id} />
+                    <span>
+                      <strong>{place.data.title}</strong>
+                      <small>{formatCategory(place.data.category)}</small>
+                    </span>
+                  </label>
+                ))
+              }
+            </fieldset>
+          </div>
+        </details>
+
+        <p id="selection-help" class="field-help">Select at least two places to build a route.</p>
+        <button class="button calculate-button" type="submit" disabled>
+          Calculate my route
+        </button>
+        <p class="planner-status" aria-live="polite"></p>
+      </form>
+
+      <div class="planner-map">
+        <Map points={mapPoints} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#route-selection');
+
+  if (form) {
+    const dropdown = form.querySelector<HTMLDetailsElement>('.poi-dropdown');
+    const checkboxes = [...form.querySelectorAll<HTMLInputElement>('input[name="placeIds"]')];
+    const count = form.querySelector<HTMLElement>('.poi-count');
+    const calculateButton = form.querySelector<HTMLButtonElement>('.calculate-button');
+    const selectAllButton = form.querySelector<HTMLButtonElement>('[data-select-all]');
+    const deselectAllButton = form.querySelector<HTMLButtonElement>('[data-deselect-all]');
+    const status = form.querySelector<HTMLElement>('.planner-status');
+
+    const updateSelection = () => {
+      const selectedCount = checkboxes.filter((checkbox) => checkbox.checked).length;
+
+      if (count) count.textContent = `${selectedCount} selected`;
+      if (calculateButton) calculateButton.disabled = selectedCount < 2;
+      if (selectAllButton) selectAllButton.disabled = selectedCount === checkboxes.length;
+      if (deselectAllButton) deselectAllButton.disabled = selectedCount === 0;
+      if (status) status.textContent = '';
+    };
+
+    for (const checkbox of checkboxes) checkbox.addEventListener('change', updateSelection);
+
+    selectAllButton?.addEventListener('click', () => {
+      for (const checkbox of checkboxes) checkbox.checked = true;
+      updateSelection();
+    });
+
+    deselectAllButton?.addEventListener('click', () => {
+      for (const checkbox of checkboxes) checkbox.checked = false;
+      updateSelection();
+    });
+
+    document.addEventListener('click', (event) => {
+      if (dropdown?.open && event.target instanceof Node && !dropdown.contains(event.target)) {
+        dropdown.open = false;
+      }
+    });
+
+    dropdown?.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        dropdown.open = false;
+        dropdown.querySelector<HTMLElement>('summary')?.focus();
+      }
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const selectedCount = checkboxes.filter((checkbox) => checkbox.checked).length;
+
+      if (selectedCount < 2) return;
+
+      if (dropdown) dropdown.open = false;
+      if (status) {
+        status.textContent = `${selectedCount} stops selected. Your selection is ready for route calculation.`;
+      }
+    });
+
+    updateSelection();
+  }
+</script>

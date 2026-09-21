@@ -3,8 +3,8 @@ title: Prato della Valle
 description: A monumental elliptical square surrounded by statues and a canal.
 category: landmark
 coordinates:
-  latitude: 45.3988
-  longitude: 11.8766
+  latitude: 45.398470
+  longitude: 11.876580
 address: Prato della Valle, 35123 Padova PD, Italy
 featured: true
 order: 1

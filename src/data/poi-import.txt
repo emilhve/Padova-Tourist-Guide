@@ -1,0 +1,14 @@
+Prato della Valle | 45.398470 | 11.876580
+Abbazia di Santa Giustina | 45.396389 | 11.879722
+Basilica di Sant'Antonio di Padova | 45.401369 | 11.880531
+Palazzo della Ragione | 45.407270 | 11.875230
+Piazza dei Signori | 45.407690 | 11.873460
+Piazza Cavour | 45.408100 | 11.877700
+Battistero di San Giovanni Battista | 45.406810 | 11.871820
+Piazza Garibaldi | 45.409230 | 11.877860
+Ponte delle Torricelle | 45.403256 | 11.875510
+Palazzo Capodilista | 45.401370 | 11.875760
+Ponte Quattro Martiri | 45.384960 | 11.882150
+Porta Portello | 45.409755 | 11.892744
+Centro Culturale Altinate San Gaetano | 45.408670 | 11.882050
+Santuario di San Leopoldo Mandić | 45.392940 | 11.870063
