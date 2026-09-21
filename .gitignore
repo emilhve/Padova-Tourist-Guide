@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+.npm-cache/
+
+# build output
+dist/
+.astro/
+
+# test output
+playwright-report/
+test-results/
+coverage/
+
+# environment and local files
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.log

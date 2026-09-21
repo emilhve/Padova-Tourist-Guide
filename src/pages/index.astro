@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import Map from '../components/Map.astro';
+import PlaceCard from '../components/PlaceCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const places = (await getCollection('places')).sort((a, b) => a.data.order - b.data.order);
+const mapPoints = places.map((place) => ({
+  title: place.data.title,
+  href: `/places/${place.id}/`,
+  latitude: place.data.coordinates.latitude,
+  longitude: place.data.coordinates.longitude,
+}));
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">Northern Italy, thoughtfully explored</p>
+      <h1>Meet Padova beyond the checklist.</h1>
+      <p class="hero-copy">
+        A practical, independent guide to remarkable places, local stories, and memorable walks.
+      </p>
+      <a class="button" href="#places">Start exploring</a>
+    </div>
+  </section>
+
+  <section id="places" class="section shell" aria-labelledby="places-title">
+    <div class="section-heading">
+      <p class="eyebrow">Selected places</p>
+      <h2 id="places-title">A good place to begin</h2>
+    </div>
+    <div class="card-grid">
+      {places.map((place) => <PlaceCard id={place.id} {...place.data} />)}
+    </div>
+  </section>
+
+  <section id="map" class="section shell" aria-labelledby="map-title">
+    <div class="section-heading">
+      <p class="eyebrow">Find your bearings</p>
+      <h2 id="map-title">Explore the map</h2>
+    </div>
+    <Map points={mapPoints} />
+  </section>
+</BaseLayout>

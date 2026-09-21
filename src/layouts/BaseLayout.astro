@@ -1,0 +1,46 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Padova Tourist Guide',
+  description = 'Discover the best places, stories, and experiences in Padova.',
+} = Astro.props;
+
+const pageTitle = title === 'Padova Tourist Guide' ? title : `${title} | Padova Tourist Guide`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Padova Tourist Guide home">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>Padova Tourist Guide</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="/#places">Places</a>
+        <a href="/#map">Map</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>Made for curious visitors to Padova.</p>
+    </footer>
+  </body>
+</html>

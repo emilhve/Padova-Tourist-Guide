@@ -1,0 +1,70 @@
+---
+import 'maplibre-gl/dist/maplibre-gl.css';
+
+interface MapPoint {
+  title: string;
+  href: string;
+  latitude: number;
+  longitude: number;
+}
+
+interface Props {
+  points: MapPoint[];
+}
+
+const { points } = Astro.props;
+---
+
+<div
+  id="guide-map"
+  class="map"
+  data-points={JSON.stringify(points)}
+  aria-label="Interactive map of featured places in Padova"
+></div>
+
+<script>
+  import {
+    Map as MapLibreMap,
+    Marker,
+    NavigationControl,
+    Popup,
+    setWorkerUrl,
+  } from 'maplibre-gl';
+  import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
+
+  interface MapPoint {
+    title: string;
+    href: string;
+    latitude: number;
+    longitude: number;
+  }
+
+  const container = document.querySelector<HTMLElement>('#guide-map');
+
+  if (container) {
+    setWorkerUrl(workerUrl);
+
+    const points = JSON.parse(container.dataset.points ?? '[]') as MapPoint[];
+    const styleUrl =
+      import.meta.env.PUBLIC_MAP_STYLE_URL ?? 'https://demotiles.maplibre.org/style.json';
+    const map = new MapLibreMap({
+      container,
+      style: styleUrl,
+      center: [11.8768, 45.4064],
+      zoom: 12.5,
+    });
+
+    map.addControl(new NavigationControl(), 'top-right');
+
+    for (const point of points) {
+      const popupContent = document.createElement('a');
+      popupContent.href = point.href;
+      popupContent.textContent = point.title;
+
+      new Marker({ color: '#b43a2f' })
+        .setLngLat([point.longitude, point.latitude])
+        .setPopup(new Popup({ offset: 24 }).setDOMContent(popupContent))
+        .addTo(map);
+    }
+  }
+</script>

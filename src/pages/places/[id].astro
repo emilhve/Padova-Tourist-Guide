@@ -1,0 +1,39 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatCategory } from '../../utils/formatCategory';
+
+export async function getStaticPaths() {
+  const places = await getCollection('places');
+
+  return places.map((place) => ({
+    params: { id: place.id },
+    props: { place },
+  }));
+}
+
+interface Props {
+  place: CollectionEntry<'places'>;
+}
+
+const { place } = Astro.props;
+const { Content } = await render(place);
+---
+
+<BaseLayout title={place.data.title} description={place.data.description}>
+  <article class="place-detail shell">
+    <a class="back-link" href="/">← All places</a>
+    <p class="eyebrow">{formatCategory(place.data.category)}</p>
+    <h1>{place.data.title}</h1>
+    <p class="lead">{place.data.description}</p>
+    <dl class="place-meta">
+      <div>
+        <dt>Address</dt>
+        <dd>{place.data.address}</dd>
+      </div>
+    </dl>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
