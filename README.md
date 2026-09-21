@@ -51,6 +51,7 @@ Add a place by copying `src/data/places/prato-della-valle.md`, updating its
 frontmatter, and writing the guide text below it. Astro validates every entry
 against `src/content.config.ts` during checks and builds.
 
-The starter uses MapLibre's public demo style. Copy `.env.example` to `.env`
-and set `PUBLIC_MAP_STYLE_URL` to your chosen map provider's style URL before a
-production launch.
+The guide uses OpenFreeMap's Liberty street-map style by default. It provides
+OpenStreetMap-based roads, buildings, parks, waterways, and labels without an
+API key. To use another compatible map style, copy `.env.example` to `.env` and
+change `PUBLIC_MAP_STYLE_URL`.

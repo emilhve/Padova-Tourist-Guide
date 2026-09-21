@@ -46,7 +46,7 @@ const { points } = Astro.props;
 
     const points = JSON.parse(container.dataset.points ?? '[]') as MapPoint[];
     const styleUrl =
-      import.meta.env.PUBLIC_MAP_STYLE_URL ?? 'https://demotiles.maplibre.org/style.json';
+      import.meta.env.PUBLIC_MAP_STYLE_URL ?? 'https://tiles.openfreemap.org/styles/liberty';
     const map = new MapLibreMap({
       container,
       style: styleUrl,
