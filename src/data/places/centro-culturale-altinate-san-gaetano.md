@@ -1,13 +1,13 @@
 ---
 title: Centro Culturale Altinate San Gaetano
-description: "A major cultural centre hosting exhibitions, talks, festivals, performances, and community events."
+description: "Et sentralt kulturhus med utstillinger, foredrag, festivaler, forestillinger og arrangementer."
 category: museum
 coordinates:
   latitude: 45.408670
   longitude: 11.882050
-address: "Via Altinate, 71, 35121 Padova PD, Italy"
+address: "Via Altinate, 71, 35121 Padova PD, Italia"
 featured: false
 order: 13
 ---
 
-The cultural centre occupies a restored former monastery that later served as Padova's courthouse. Its galleries and public spaces support a changing programme of art and cultural events.
+Kulturhuset holder til i et restaurert tidligere kloster som senere fungerte som Padovas tinghus. Galleriene og fellesområdene brukes til et skiftende program med kunst og kulturarrangementer.

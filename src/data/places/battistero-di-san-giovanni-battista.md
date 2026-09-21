@@ -1,13 +1,13 @@
 ---
 title: Battistero di San Giovanni Battista
-description: "Padova Cathedral's medieval baptistery, celebrated for its richly detailed fresco cycle."
+description: "Det middelalderske dåpskapellet ved katedralen i Padova, kjent for sin detaljrike freskosyklus."
 category: church
 coordinates:
   latitude: 45.406810
   longitude: 11.871820
-address: "Piazza Duomo, 35141 Padova PD, Italy"
+address: "Piazza Duomo, 35141 Padova PD, Italia"
 featured: false
 order: 7
 ---
 
-The baptistery stands beside Padova Cathedral in Piazza Duomo. Its interior is covered by fourteenth-century frescoes painted by Giusto de' Menabuoi.
+Dåpskapellet står ved siden av katedralen i Padova på Piazza Duomo. Interiøret er dekket av fresker som Giusto de' Menabuoi malte på 1300-tallet.

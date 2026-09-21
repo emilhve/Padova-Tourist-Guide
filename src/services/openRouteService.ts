@@ -63,14 +63,14 @@ async function requestJson<T>(url: string, apiKey: string, body: unknown): Promi
       signal: AbortSignal.timeout(20_000),
     });
   } catch {
-    throw new RoutingProviderError('The routing service could not be reached.', 504);
+    throw new RoutingProviderError('Rutetjenesten kunne ikke nås.', 504);
   }
 
   if (!response.ok) {
     throw new RoutingProviderError(
       response.status === 429
-        ? 'The routing service usage limit has been reached. Please try again later.'
-        : 'The routing service could not calculate this route.',
+        ? 'Bruksgrensen for rutetjenesten er nådd. Prøv igjen senere.'
+        : 'Rutetjenesten kunne ikke beregne denne ruten.',
       response.status,
     );
   }
@@ -78,7 +78,7 @@ async function requestJson<T>(url: string, apiKey: string, body: unknown): Promi
   try {
     return (await response.json()) as T;
   } catch {
-    throw new RoutingProviderError('The routing service returned an invalid response.', 502);
+    throw new RoutingProviderError('Rutetjenesten returnerte et ugyldig svar.', 502);
   }
 }
 
@@ -96,7 +96,7 @@ export async function calculateRoute(
   );
 
   if (!matrix.distances) {
-    throw new RoutingProviderError('The routing service returned no distance matrix.', 502);
+    throw new RoutingProviderError('Rutetjenesten returnerte ingen avstandsmatrise.', 502);
   }
 
   const order = findShortestOpenRoute(matrix.distances);
@@ -120,7 +120,7 @@ export async function calculateRoute(
     typeof summary?.distance !== 'number' ||
     typeof summary.duration !== 'number'
   ) {
-    throw new RoutingProviderError('The routing service returned an incomplete route.', 502);
+    throw new RoutingProviderError('Rutetjenesten returnerte en ufullstendig rute.', 502);
   }
 
   return {

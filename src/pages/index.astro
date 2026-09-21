@@ -16,19 +16,13 @@ const mapPoints = places.map((place) => ({
 <BaseLayout>
   <section class="hero">
     <div class="hero-content">
-      <p class="eyebrow">Northern Italy, thoughtfully explored</p>
-      <h1>Meet Padova beyond the checklist.</h1>
-      <p class="hero-copy">
-        A practical, independent guide to remarkable places, local stories, and memorable walks.
-      </p>
-      <a class="button" href="#places">Start exploring</a>
+      <h1>En praktisk guide til å utforske Padova</h1>
     </div>
   </section>
 
   <section id="places" class="section shell" aria-labelledby="places-title">
     <div class="section-heading">
-      <p class="eyebrow">Selected places</p>
-      <h2 id="places-title">A good place to begin</h2>
+      <h2 id="places-title">Landemerker det er verdt å se</h2>
     </div>
     <div class="card-grid">
       {places.map((place) => <PlaceCard id={place.id} {...place.data} />)}
@@ -37,8 +31,7 @@ const mapPoints = places.map((place) => ({
 
   <section id="map" class="section shell" aria-labelledby="map-title">
     <div class="section-heading">
-      <p class="eyebrow">Find your bearings</p>
-      <h2 id="map-title">Explore the map</h2>
+      <h2 id="map-title">Utforsk kartet</h2>
     </div>
     <Map points={mapPoints} />
   </section>

@@ -32,7 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     body = (await request.json()) as RouteRequest;
   } catch {
-    return json({ error: 'The route request must contain valid JSON.' }, 400);
+    return json({ error: 'Ruteforespørselen må inneholde gyldig JSON.' }, 400);
   }
 
   const placeIds = Array.isArray(body.placeIds)
@@ -48,20 +48,20 @@ export const POST: APIRoute = async ({ request }) => {
     uniquePlaceIds.length < 2 ||
     uniquePlaceIds.length > 15
   ) {
-    return json({ error: 'Select between 2 and 15 unique points of interest.' }, 400);
+    return json({ error: 'Velg mellom 2 og 15 unike severdigheter.' }, 400);
   }
 
   if (!startPlaceId || !uniquePlaceIds.includes(startPlaceId)) {
-    return json({ error: 'Choose one of the selected points as the starting point.' }, 400);
+    return json({ error: 'Velg en av de valgte severdighetene som startsted.' }, 400);
   }
 
-  if (!mode) return json({ error: 'Choose walking or cycling.' }, 400);
+  if (!mode) return json({ error: 'Velg om du vil gå eller sykle.' }, 400);
 
   const places = await getCollection('places');
   const placesById = new Map(places.map((place) => [place.id, place]));
 
   if (uniquePlaceIds.some((id) => !placesById.has(id))) {
-    return json({ error: 'One or more selected places do not exist.' }, 400);
+    return json({ error: 'Ett eller flere av de valgte stedene finnes ikke.' }, 400);
   }
 
   const orderedIds = [startPlaceId, ...uniquePlaceIds.filter((id) => id !== startPlaceId)];
@@ -92,8 +92,8 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ error: error.message }, error.status === 429 ? 429 : error.status === 504 ? 504 : 502);
     }
 
-    return json({ error: 'An unexpected error occurred while calculating the route.' }, 500);
+    return json({ error: 'Det oppstod en uventet feil under ruteberegningen.' }, 500);
   }
 };
 
-export const ALL: APIRoute = () => json({ error: 'Method not allowed.' }, 405);
+export const ALL: APIRoute = () => json({ error: 'Metoden er ikke tillatt.' }, 405);

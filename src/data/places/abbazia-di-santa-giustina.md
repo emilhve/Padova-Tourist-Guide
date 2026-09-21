@@ -1,13 +1,13 @@
 ---
 title: Abbazia di Santa Giustina
-description: "A monumental Benedictine abbey and basilica overlooking the southern edge of Prato della Valle."
+description: "Et monumentalt benediktinerkloster og en basilika ved den sørlige kanten av Prato della Valle."
 category: church
 coordinates:
   latitude: 45.396389
   longitude: 11.879722
-address: "Prato della Valle - Sagrato di Santa Giustina, Padova PD, Italy"
+address: "Prato della Valle - Sagrato di Santa Giustina, Padova PD, Italia"
 featured: false
 order: 2
 ---
 
-The Abbey of Santa Giustina stands on an early Christian site associated with Padova's patron saint. Its vast sixteenth-century basilica contains important chapels, tombs, and works of art.
+Abbazia di Santa Giustina ligger på et tidlig kristent område knyttet til Padovas skytshelgen. Den enorme basilikaen fra 1500-tallet rommer viktige kapeller, gravsteder og kunstverk.

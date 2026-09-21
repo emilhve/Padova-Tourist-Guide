@@ -2,7 +2,14 @@
 import { getCollection } from 'astro:content';
 import Map from '../components/Map.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { formatCategory } from '../utils/formatCategory';
+
+const categoryLabels = {
+  landmark: 'Landemerke',
+  museum: 'Museum',
+  church: 'Kirke',
+  food: 'Mat',
+  park: 'Park',
+};
 
 const places = (await getCollection('places')).sort((a, b) => a.data.order - b.data.order);
 const mapPoints = places.map((place) => ({
@@ -14,19 +21,19 @@ const mapPoints = places.map((place) => ({
 ---
 
 <BaseLayout
-  title="Route planner"
-  description="Choose the Padova places you want to visit and prepare a walking or cycling route."
+  title="Ruteplanlegger"
+  description="Velg stedene du vil besøke i Padova, og lag en rute til fots eller på sykkel."
+  lang="no"
 >
   <header class="planner-heading shell">
-    <p class="eyebrow">Build your day</p>
-    <h1>Choose your Padova stops.</h1>
+    <p class="eyebrow">Planlegg dagen</p>
+    <h1>Velg stoppene dine i Padova.</h1>
     <p class="lead">
-      Select the places you want to include, choose one as your starting point, and decide whether
-      you want to walk or cycle.
+      Velg stedene du vil besøke, velg ett av dem som startsted, og bestem om du vil gå eller sykle.
     </p>
     <div class="planner-notice" role="note">
-      <strong>Before calculating:</strong> choose at least two points of interest. Your starting
-      point must be one of the places you selected.
+      <strong>Før du beregner ruten:</strong> Velg minst to severdigheter. Startstedet må være ett
+      av stedene du har valgt.
     </div>
   </header>
 
@@ -34,24 +41,24 @@ const mapPoints = places.map((place) => ({
     <div class="planner-grid">
       <form id="route-selection" class="planner-card">
         <div class="planner-card-heading">
-          <p class="eyebrow">Step 1</p>
-          <h2 id="selection-title">Points of interest</h2>
+          <p class="eyebrow">Steg 1</p>
+          <h2 id="selection-title">Severdigheter</h2>
         </div>
 
         <details class="poi-dropdown">
           <summary>
-            <span>Choose points of interest</span>
-            <span class="poi-count" aria-live="polite">0 selected</span>
+            <span>Velg severdigheter</span>
+            <span class="poi-count" aria-live="polite">0 valgt</span>
           </summary>
 
           <div class="poi-menu">
-            <div class="poi-actions" aria-label="Bulk selection controls">
-              <button type="button" data-select-all>Select all</button>
-              <button type="button" data-deselect-all disabled>Deselect all</button>
+            <div class="poi-actions" aria-label="Velg eller fjern alle severdigheter">
+              <button type="button" data-select-all>Velg alle</button>
+              <button type="button" data-deselect-all disabled>Fjern alle valg</button>
             </div>
 
             <fieldset class="poi-options">
-              <legend class="visually-hidden">Select points of interest</legend>
+              <legend class="visually-hidden">Velg severdigheter</legend>
               {
                 places.map((place) => (
                   <label class="poi-option">
@@ -63,7 +70,7 @@ const mapPoints = places.map((place) => ({
                     />
                     <span>
                       <strong>{place.data.title}</strong>
-                      <small>{formatCategory(place.data.category)}</small>
+                      <small>{categoryLabels[place.data.category]}</small>
                     </span>
                   </label>
                 ))
@@ -72,51 +79,51 @@ const mapPoints = places.map((place) => ({
           </div>
         </details>
 
-        <p id="selection-help" class="field-help">Select at least two places to build a route.</p>
+        <p id="selection-help" class="field-help">Velg minst to steder for å lage en rute.</p>
 
         <div class="start-field">
           <label for="route-start">
-            <span class="eyebrow">Step 2</span>
-            <strong>Starting point</strong>
+            <span class="eyebrow">Steg 2</span>
+            <strong>Startsted</strong>
           </label>
           <select id="route-start" name="startPlaceId" disabled>
-            <option value="">Choose a selected point</option>
+            <option value="">Velg et av de valgte stedene</option>
           </select>
-          <p class="field-help">Only points selected in step 1 will appear here.</p>
+          <p class="field-help">Bare steder du valgte i steg 1 vises her.</p>
         </div>
 
         <fieldset class="travel-mode">
           <legend>
-            <span class="eyebrow">Step 3</span>
-            <strong>Travel mode</strong>
+            <span class="eyebrow">Steg 3</span>
+            <strong>Reisemåte</strong>
           </legend>
           <div class="mode-options">
             <label>
               <input type="radio" name="mode" value="walking" checked />
-              <span>Walking</span>
+              <span>Til fots</span>
             </label>
             <label>
               <input type="radio" name="mode" value="cycling" />
-              <span>Cycling</span>
+              <span>Sykkel</span>
             </label>
           </div>
         </fieldset>
 
         <button class="button calculate-button" type="submit" disabled>
-          Calculate my route
+          Beregn ruten min
         </button>
         <p class="planner-status" aria-live="polite"></p>
 
         <section class="route-results" aria-labelledby="route-results-title" hidden>
-          <p class="eyebrow">Calculated route</p>
-          <h3 id="route-results-title">Your itinerary</h3>
+          <p class="eyebrow">Beregnet rute</p>
+          <h3 id="route-results-title">Din reiserute</h3>
           <dl class="route-totals">
             <div>
-              <dt>Distance</dt>
+              <dt>Distanse</dt>
               <dd data-route-distance></dd>
             </div>
             <div>
-              <dt>Estimated time</dt>
+              <dt>Beregnet tid</dt>
               <dd data-route-duration></dd>
             </div>
           </dl>
@@ -125,7 +132,7 @@ const mapPoints = places.map((place) => ({
       </form>
 
       <div class="planner-map">
-        <Map points={mapPoints} routePlanning />
+        <Map points={mapPoints} routePlanning ariaLabel="Interaktivt kart over severdigheter i Padova" />
       </div>
     </div>
   </section>
@@ -197,7 +204,7 @@ const mapPoints = places.map((place) => ({
           : '';
       }
 
-      if (count) count.textContent = `${selectedCount} selected`;
+      if (count) count.textContent = `${selectedCount} valgt`;
       updateCalculateButton();
       if (selectAllButton) selectAllButton.disabled = selectedCount === checkboxes.length;
       if (deselectAllButton) deselectAllButton.disabled = selectedCount === 0;
@@ -257,10 +264,11 @@ const mapPoints = places.map((place) => ({
       if (dropdown) dropdown.open = false;
       calculating = true;
       updateCalculateButton();
-      if (calculateButton) calculateButton.textContent = 'Calculating route…';
+      if (calculateButton) calculateButton.textContent = 'Beregner rute…';
       if (status) {
         status.dataset.state = 'loading';
-        status.textContent = `Calculating a ${mode} route from ${startingPoint}…`;
+        const modeLabel = mode === 'walking' ? 'gårute' : 'sykkelrute';
+        status.textContent = `Beregner en ${modeLabel} fra ${startingPoint}…`;
       }
       if (routeResults) routeResults.hidden = true;
 
@@ -277,7 +285,7 @@ const mapPoints = places.map((place) => ({
         const result = (await response.json()) as RouteResponse | { error?: string };
 
         if (!response.ok || !('geometry' in result)) {
-          throw new Error('error' in result && result.error ? result.error : 'The route could not be calculated.');
+          throw new Error('error' in result && result.error ? result.error : 'Ruten kunne ikke beregnes.');
         }
 
         if (routeDistance) {
@@ -291,7 +299,7 @@ const mapPoints = places.map((place) => ({
           const totalMinutes = Math.max(1, Math.round(result.totalDurationSeconds / 60));
           const hours = Math.floor(totalMinutes / 60);
           const minutes = totalMinutes % 60;
-          routeDuration.textContent = hours > 0 ? `${hours} hr ${minutes} min` : `${minutes} min`;
+          routeDuration.textContent = hours > 0 ? `${hours} t ${minutes} min` : `${minutes} min`;
         }
 
         if (routeStops) {
@@ -316,7 +324,7 @@ const mapPoints = places.map((place) => ({
         if (routeResults) routeResults.hidden = false;
         if (status) {
           status.dataset.state = 'success';
-          status.textContent = 'Route calculated successfully.';
+          status.textContent = 'Ruten er beregnet.';
         }
 
         window.dispatchEvent(new CustomEvent('planner:route', { detail: result }));
@@ -324,11 +332,11 @@ const mapPoints = places.map((place) => ({
         if (status) {
           status.dataset.state = 'error';
           status.textContent =
-            error instanceof Error ? error.message : 'The route could not be calculated.';
+            error instanceof Error ? error.message : 'Ruten kunne ikke beregnes.';
         }
       } finally {
         calculating = false;
-        if (calculateButton) calculateButton.textContent = 'Calculate my route';
+        if (calculateButton) calculateButton.textContent = 'Beregn ruten min';
         updateCalculateButton();
       }
     });

@@ -1,17 +1,17 @@
 ---
 title: Prato della Valle
-description: A monumental elliptical square surrounded by statues and a canal.
+description: En monumental elliptisk plass omgitt av statuer og en kanal.
 category: landmark
 coordinates:
   latitude: 45.398470
   longitude: 11.876580
-address: Prato della Valle, 35123 Padova PD, Italy
+address: Prato della Valle, 35123 Padova PD, Italia
 featured: true
 order: 1
 ---
 
-Prato della Valle is one of Padova's defining public spaces. Its central island,
-Isola Memmia, is encircled by a canal and two rings of statues.
+Prato della Valle er et av Padovas mest karakteristiske offentlige rom. Den sentrale øya,
+Isola Memmia, er omgitt av en kanal og to rekker med statuer.
 
-Visit early in the morning for quieter paths and softer light, or return in the
-evening when the square becomes a popular meeting place.
+Kom tidlig om morgenen for roligere gangveier og mykere lys, eller vend tilbake om
+kvelden når plassen blir et populært møtested.

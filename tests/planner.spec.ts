@@ -35,19 +35,20 @@ test('selects and clears route stops', async ({ page }) => {
 
   await page.goto('/planner/');
 
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Choose your Padova stops.');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Velg stoppene dine i Padova.');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'no');
 
-  await page.getByText('Choose points of interest').click();
+  await page.locator('.poi-dropdown summary').click();
   const places = page.getByRole('checkbox');
   await expect(places).toHaveCount(14);
 
-  const calculateButton = page.getByRole('button', { name: 'Calculate my route' });
-  const startSelect = page.getByLabel('Starting point');
+  const calculateButton = page.getByRole('button', { name: 'Beregn ruten min' });
+  const startSelect = page.getByLabel('Startsted');
   await expect(calculateButton).toBeDisabled();
   await expect(startSelect).toBeDisabled();
 
-  await page.getByRole('button', { name: 'Select all', exact: true }).click();
-  await expect(page.getByText('14 selected')).toBeVisible();
+  await page.getByRole('button', { name: 'Velg alle', exact: true }).click();
+  await expect(page.getByText('14 valgt')).toBeVisible();
   await expect(startSelect).toBeEnabled();
   await expect(startSelect.locator('option')).toHaveCount(15);
   await expect(calculateButton).toBeDisabled();
@@ -55,15 +56,15 @@ test('selects and clears route stops', async ({ page }) => {
   await startSelect.selectOption('prato-della-valle');
   await expect(calculateButton).toBeEnabled();
 
-  await page.getByRole('button', { name: 'Deselect all' }).click();
-  await expect(page.getByText('0 selected')).toBeVisible();
+  await page.getByRole('button', { name: 'Fjern alle valg' }).click();
+  await expect(page.getByText('0 valgt')).toBeVisible();
   await expect(startSelect).toBeDisabled();
   await expect(startSelect).toHaveValue('');
   await expect(calculateButton).toBeDisabled();
 
   await places.nth(0).check();
   await places.nth(1).check();
-  await page.getByText('Choose points of interest').click();
+  await page.locator('.poi-dropdown summary').click();
   await startSelect.selectOption('prato-della-valle');
   await expect(calculateButton).toBeEnabled();
 
@@ -77,8 +78,8 @@ test('selects and clears route stops', async ({ page }) => {
     mode: 'walking',
   });
 
-  await expect(page.getByText('Route calculated successfully.')).toBeVisible();
+  await expect(page.getByText('Ruten er beregnet.')).toBeVisible();
   await expect(page.getByText('1.2 km')).toBeVisible();
   await expect(page.getByText('15 min')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Your itinerary' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Din reiserute' })).toBeVisible();
 });

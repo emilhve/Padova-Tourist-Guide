@@ -7,7 +7,9 @@ test('shows the guide and links to a place', async ({ page }) => {
 
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Meet Padova');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'En praktisk guide til å utforske Padova',
+  );
   await expect(page.locator('#guide-map canvas')).toBeVisible();
   await workerResponse;
   await page.getByRole('link', { name: /Prato della Valle/ }).first().click();

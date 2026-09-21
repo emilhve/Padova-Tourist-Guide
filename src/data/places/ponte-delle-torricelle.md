@@ -1,13 +1,13 @@
 ---
 title: Ponte delle Torricelle
-description: "A historic crossing where Via Roma meets Via Umberto I along one of Padova's old canal routes."
+description: "En historisk overgang der Via Roma møter Via Umberto I langs en av Padovas gamle kanalruter."
 category: landmark
 coordinates:
   latitude: 45.403256
   longitude: 11.875510
-address: "Ponte delle Torricelle, 35122 Padova PD, Italy"
+address: "Ponte delle Torricelle, 35122 Padova PD, Italia"
 featured: false
 order: 9
 ---
 
-Ponte delle Torricelle connects two of the historic centre's main streets. The crossing recalls the waterways and medieval approaches that once shaped this part of Padova.
+Ponte delle Torricelle forbinder to av hovedgatene i det historiske sentrum. Overgangen minner om vannveiene og middelalderens innfartsårer som en gang formet denne delen av Padova.

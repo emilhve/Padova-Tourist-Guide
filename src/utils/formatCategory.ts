@@ -1,6 +1,11 @@
 export function formatCategory(category: string): string {
-  return category
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+  const labels: Record<string, string> = {
+    landmark: 'Landemerke',
+    museum: 'Museum',
+    church: 'Kirke',
+    food: 'Mat og drikke',
+    park: 'Park',
+  };
+
+  return labels[category] ?? category;
 }

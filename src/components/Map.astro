@@ -11,9 +11,14 @@ interface MapPoint {
 interface Props {
   points: MapPoint[];
   routePlanning?: boolean;
+  ariaLabel?: string;
 }
 
-const { points, routePlanning = false } = Astro.props;
+const {
+  points,
+  routePlanning = false,
+  ariaLabel = 'Interaktivt kart over severdigheter i Padova',
+} = Astro.props;
 ---
 
 <div
@@ -21,7 +26,7 @@ const { points, routePlanning = false } = Astro.props;
   class="map"
   data-points={JSON.stringify(points)}
   data-route-planning={String(routePlanning)}
-  aria-label="Interactive map of featured places in Padova"
+  aria-label={ariaLabel}
 ></div>
 
 <script>
@@ -61,6 +66,28 @@ const { points, routePlanning = false } = Astro.props;
       style: styleUrl,
       center: [11.8768, 45.4064],
       zoom: 12.5,
+      locale: {
+        'AttributionControl.MapFeedback': 'Tilbakemelding om kartet',
+        'NavigationControl.ZoomIn': 'Zoom inn',
+        'NavigationControl.ZoomOut': 'Zoom ut',
+        'NavigationControl.ResetBearing': 'Dra for å rotere kartet, klikk for å vende mot nord',
+        'AttributionControl.ToggleAttribution': 'Vis eller skjul kildeinformasjon',
+        'FullscreenControl.Enter': 'Vis i fullskjerm',
+        'FullscreenControl.Exit': 'Avslutt fullskjerm',
+        'GeolocateControl.FindMyLocation': 'Finn posisjonen min',
+        'GeolocateControl.LocationNotAvailable': 'Posisjonen er ikke tilgjengelig',
+        'LogoControl.Title': 'MapLibre-logo',
+        'Map.Title': 'Kart',
+        'Marker.Title': 'Kartmarkør',
+        'Popup.Close': 'Lukk vinduet',
+        'GlobeControl.Enable': 'Aktiver globus',
+        'GlobeControl.Disable': 'Deaktiver globus',
+        'TerrainControl.Enable': 'Aktiver terreng',
+        'TerrainControl.Disable': 'Deaktiver terreng',
+        'CooperativeGesturesHandler.WindowsHelpText': 'Bruk Ctrl + rullehjul for å zoome i kartet',
+        'CooperativeGesturesHandler.MacHelpText': 'Bruk ⌘ + rullehjul for å zoome i kartet',
+        'CooperativeGesturesHandler.MobileHelpText': 'Bruk to fingre for å flytte kartet',
+      },
     });
 
     map.addControl(new NavigationControl(), 'top-right');

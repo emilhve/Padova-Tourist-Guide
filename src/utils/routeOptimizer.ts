@@ -1,6 +1,6 @@
 export class UnreachableRouteError extends Error {
   constructor() {
-    super('The selected places cannot all be connected by this travel mode.');
+    super('De valgte stedene kan ikke kobles sammen med denne reisemåten.');
     this.name = 'UnreachableRouteError';
   }
 }
