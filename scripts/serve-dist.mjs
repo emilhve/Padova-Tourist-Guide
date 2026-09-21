@@ -1,9 +1,9 @@
-import { createReadStream } from 'node:fs';
+import { createReadStream, existsSync } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { extname, join, relative, resolve } from 'node:path';
 
-const root = resolve('dist');
+const root = existsSync(resolve('dist/client')) ? resolve('dist/client') : resolve('dist');
 const host = '127.0.0.1';
 const port = 4321;
 

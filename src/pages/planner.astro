@@ -21,16 +21,20 @@ const mapPoints = places.map((place) => ({
     <p class="eyebrow">Build your day</p>
     <h1>Choose your Padova stops.</h1>
     <p class="lead">
-      Select the places you want to include. We will use them to calculate your route in the next
-      step.
+      Select the places you want to include, choose one as your starting point, and decide whether
+      you want to walk or cycle.
     </p>
+    <div class="planner-notice" role="note">
+      <strong>Before calculating:</strong> choose at least two points of interest. Your starting
+      point must be one of the places you selected.
+    </div>
   </header>
 
   <section class="planner-section shell" aria-labelledby="selection-title">
     <div class="planner-grid">
       <form id="route-selection" class="planner-card">
         <div class="planner-card-heading">
-          <p class="eyebrow">Your route</p>
+          <p class="eyebrow">Step 1</p>
           <h2 id="selection-title">Points of interest</h2>
         </div>
 
@@ -51,7 +55,12 @@ const mapPoints = places.map((place) => ({
               {
                 places.map((place) => (
                   <label class="poi-option">
-                    <input type="checkbox" name="placeIds" value={place.id} />
+                    <input
+                      type="checkbox"
+                      name="placeIds"
+                      value={place.id}
+                      data-title={place.data.title}
+                    />
                     <span>
                       <strong>{place.data.title}</strong>
                       <small>{formatCategory(place.data.category)}</small>
@@ -64,42 +73,147 @@ const mapPoints = places.map((place) => ({
         </details>
 
         <p id="selection-help" class="field-help">Select at least two places to build a route.</p>
+
+        <div class="start-field">
+          <label for="route-start">
+            <span class="eyebrow">Step 2</span>
+            <strong>Starting point</strong>
+          </label>
+          <select id="route-start" name="startPlaceId" disabled>
+            <option value="">Choose a selected point</option>
+          </select>
+          <p class="field-help">Only points selected in step 1 will appear here.</p>
+        </div>
+
+        <fieldset class="travel-mode">
+          <legend>
+            <span class="eyebrow">Step 3</span>
+            <strong>Travel mode</strong>
+          </legend>
+          <div class="mode-options">
+            <label>
+              <input type="radio" name="mode" value="walking" checked />
+              <span>Walking</span>
+            </label>
+            <label>
+              <input type="radio" name="mode" value="cycling" />
+              <span>Cycling</span>
+            </label>
+          </div>
+        </fieldset>
+
         <button class="button calculate-button" type="submit" disabled>
           Calculate my route
         </button>
         <p class="planner-status" aria-live="polite"></p>
+
+        <section class="route-results" aria-labelledby="route-results-title" hidden>
+          <p class="eyebrow">Calculated route</p>
+          <h3 id="route-results-title">Your itinerary</h3>
+          <dl class="route-totals">
+            <div>
+              <dt>Distance</dt>
+              <dd data-route-distance></dd>
+            </div>
+            <div>
+              <dt>Estimated time</dt>
+              <dd data-route-duration></dd>
+            </div>
+          </dl>
+          <ol class="route-stop-list" data-route-stops></ol>
+        </section>
       </form>
 
       <div class="planner-map">
-        <Map points={mapPoints} />
+        <Map points={mapPoints} routePlanning />
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <script>
+  import type { LineString } from 'geojson';
+
+  interface RouteResponse {
+    mode: 'walking' | 'cycling';
+    orderedStops: Array<{
+      id: string;
+      title: string;
+      longitude: number;
+      latitude: number;
+    }>;
+    geometry: LineString;
+    totalDistanceMeters: number;
+    totalDurationSeconds: number;
+  }
+
   const form = document.querySelector<HTMLFormElement>('#route-selection');
 
   if (form) {
     const dropdown = form.querySelector<HTMLDetailsElement>('.poi-dropdown');
     const checkboxes = [...form.querySelectorAll<HTMLInputElement>('input[name="placeIds"]')];
     const count = form.querySelector<HTMLElement>('.poi-count');
+    const startSelect = form.querySelector<HTMLSelectElement>('#route-start');
     const calculateButton = form.querySelector<HTMLButtonElement>('.calculate-button');
     const selectAllButton = form.querySelector<HTMLButtonElement>('[data-select-all]');
     const deselectAllButton = form.querySelector<HTMLButtonElement>('[data-deselect-all]');
     const status = form.querySelector<HTMLElement>('.planner-status');
+    const routeResults = form.querySelector<HTMLElement>('.route-results');
+    const routeDistance = form.querySelector<HTMLElement>('[data-route-distance]');
+    const routeDuration = form.querySelector<HTMLElement>('[data-route-duration]');
+    const routeStops = form.querySelector<HTMLOListElement>('[data-route-stops]');
+    let calculating = false;
+
+    const resetResult = () => {
+      if (status) {
+        status.textContent = '';
+        delete status.dataset.state;
+      }
+      if (routeResults) routeResults.hidden = true;
+    };
+
+    const updateCalculateButton = () => {
+      const selectedCount = checkboxes.filter((checkbox) => checkbox.checked).length;
+      if (calculateButton) {
+        calculateButton.disabled = calculating || selectedCount < 2 || !startSelect?.value;
+      }
+    };
 
     const updateSelection = () => {
-      const selectedCount = checkboxes.filter((checkbox) => checkbox.checked).length;
+      const selected = checkboxes.filter((checkbox) => checkbox.checked);
+      const selectedCount = selected.length;
+      const previousStart = startSelect?.value ?? '';
+
+      if (startSelect) {
+        startSelect.length = 1;
+
+        for (const checkbox of selected) {
+          startSelect.add(new Option(checkbox.dataset.title ?? checkbox.value, checkbox.value));
+        }
+
+        startSelect.disabled = selectedCount < 2;
+        startSelect.value = selected.some((checkbox) => checkbox.value === previousStart)
+          ? previousStart
+          : '';
+      }
 
       if (count) count.textContent = `${selectedCount} selected`;
-      if (calculateButton) calculateButton.disabled = selectedCount < 2;
+      updateCalculateButton();
       if (selectAllButton) selectAllButton.disabled = selectedCount === checkboxes.length;
       if (deselectAllButton) deselectAllButton.disabled = selectedCount === 0;
-      if (status) status.textContent = '';
+      resetResult();
     };
 
     for (const checkbox of checkboxes) checkbox.addEventListener('change', updateSelection);
+
+    startSelect?.addEventListener('change', () => {
+      updateCalculateButton();
+      resetResult();
+    });
+
+    for (const mode of form.querySelectorAll<HTMLInputElement>('input[name="mode"]')) {
+      mode.addEventListener('change', resetResult);
+    }
 
     selectAllButton?.addEventListener('click', () => {
       for (const checkbox of checkboxes) checkbox.checked = true;
@@ -124,15 +238,98 @@ const mapPoints = places.map((place) => ({
       }
     });
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const selectedCount = checkboxes.filter((checkbox) => checkbox.checked).length;
+      const selected = checkboxes.filter((checkbox) => checkbox.checked);
+      const selectedCount = selected.length;
+      const startingPoint = startSelect?.selectedOptions[0]?.textContent;
+      const mode = new FormData(form).get('mode');
 
-      if (selectedCount < 2) return;
+      if (
+        selectedCount < 2 ||
+        !startSelect?.value ||
+        !startingPoint ||
+        (mode !== 'walking' && mode !== 'cycling')
+      ) {
+        return;
+      }
 
       if (dropdown) dropdown.open = false;
+      calculating = true;
+      updateCalculateButton();
+      if (calculateButton) calculateButton.textContent = 'Calculating route…';
       if (status) {
-        status.textContent = `${selectedCount} stops selected. Your selection is ready for route calculation.`;
+        status.dataset.state = 'loading';
+        status.textContent = `Calculating a ${mode} route from ${startingPoint}…`;
+      }
+      if (routeResults) routeResults.hidden = true;
+
+      try {
+        const response = await fetch('/api/route', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            placeIds: selected.map((checkbox) => checkbox.value),
+            startPlaceId: startSelect.value,
+            mode,
+          }),
+        });
+        const result = (await response.json()) as RouteResponse | { error?: string };
+
+        if (!response.ok || !('geometry' in result)) {
+          throw new Error('error' in result && result.error ? result.error : 'The route could not be calculated.');
+        }
+
+        if (routeDistance) {
+          routeDistance.textContent =
+            result.totalDistanceMeters >= 1_000
+              ? `${(result.totalDistanceMeters / 1_000).toFixed(1)} km`
+              : `${Math.round(result.totalDistanceMeters)} m`;
+        }
+
+        if (routeDuration) {
+          const totalMinutes = Math.max(1, Math.round(result.totalDurationSeconds / 60));
+          const hours = Math.floor(totalMinutes / 60);
+          const minutes = totalMinutes % 60;
+          routeDuration.textContent = hours > 0 ? `${hours} hr ${minutes} min` : `${minutes} min`;
+        }
+
+        if (routeStops) {
+          routeStops.replaceChildren(
+            ...result.orderedStops.map((stop, index) => {
+              const item = document.createElement('li');
+              const name = document.createElement('span');
+              name.textContent = stop.title;
+              item.append(name);
+
+              if (index === 0) {
+                const badge = document.createElement('small');
+                badge.textContent = 'Start';
+                item.append(badge);
+              }
+
+              return item;
+            }),
+          );
+        }
+
+        if (routeResults) routeResults.hidden = false;
+        if (status) {
+          status.dataset.state = 'success';
+          status.textContent = 'Route calculated successfully.';
+        }
+
+        window.dispatchEvent(new CustomEvent('planner:route', { detail: result }));
+      } catch (error) {
+        if (status) {
+          status.dataset.state = 'error';
+          status.textContent =
+            error instanceof Error ? error.message : 'The route could not be calculated.';
+        }
+      } finally {
+        calculating = false;
+        if (calculateButton) calculateButton.textContent = 'Calculate my route';
+        updateCalculateButton();
       }
     });
 
